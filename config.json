@@ -1,0 +1,25 @@
+{
+    "battle_name": "DataSmart Point Aktien-Battle",
+    "save_history": true,
+    "players": [
+        {
+            "name": "Ben",
+            "ticker": "AAPL"
+        },
+        {
+            "name": "Gandalf",
+            "ticker": "RHM.DE"
+        },
+        {
+            "name": "Oliver Queen",
+            "ticker": "MSFT"
+        },
+        {
+            "name": "Peter",
+            "ticker": "NVDA"
+        }
+    ],
+    "ntfy": {
+        "enabled": true
+    }
+}

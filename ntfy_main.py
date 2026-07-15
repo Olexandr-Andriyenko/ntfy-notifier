@@ -96,19 +96,19 @@ def get_change_percent(result: dict) -> float:
     """Gibt die prozentuale Veränderung eines Ergebnisses zurück."""
     return result["change_percent"]
 
-def send_winner_notification(winner: dict, ntfy_config: dict):
+def send_winner_notification(winner: dict, ntfy_config: dict) -> tuple[bool, str]:
     """Sendet den Gewinner als Push Nachricht über ntfy."""
     
     enabled = ntfy_config.get("enabled", False)
     if not enabled:
-        print("ntfy ist in der config.json deaktiviert.")
-        return
+        return False, "ntfy ist in der config.json deaktiviert."
     
     server = os.getenv("NTFY_SERVER", "")
     topic = os.getenv("NTFY_TOPIC", "")
     
     if not server or not topic:
-        raise ValueError(
+        return(
+            False,
             "In der .env-Datei müssen 'server' und"
             "'topic' eingetragen sein"
             )
@@ -135,10 +135,10 @@ def send_winner_notification(winner: dict, ntfy_config: dict):
         
         response.raise_for_status()
         
-        print("Push Nachricht wurde erfolgreich gesendet")
+        return True, "Push Nachricht wurde erfolgreich gesendet"
         
     except requests.RequestException as error:
-        print(f"Push Nachricht konnte nicht gesendet werden: {error}")
+        return False, f"Push Nachricht konnte nicht gesendet werden: {error}"
 
 def run_battle(players: list[dict]):
     """Führt das Aktien Battle für alle Spieler durch."""
@@ -152,7 +152,7 @@ def run_battle(players: list[dict]):
             results.append(result)#
         except Exception as error:
             error_message = (
-                f"{player["name"] ({player["ticker"]}): {error}}"
+                f"{player['name'] ({player['ticker']}): {error}}"
             )
             errors.append(error_message)
     
@@ -194,7 +194,5 @@ if __name__ == "__main__":
     print(30 * "-")
     print(f"Der Gewinner ist {winner['player']}!")
     
-    send_winner_notification(winner, ntfy_config)
-    
-    
-    
+    success, notification_message =  send_winner_notification(winner, ntfy_config)
+    print(notification_message)

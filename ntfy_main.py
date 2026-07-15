@@ -109,7 +109,7 @@ def send_winner_notification(winner: dict, ntfy_config: dict):
     
     if not server or not topic:
         raise ValueError(
-            "In der config.json müssen 'server' und"
+            "In der .env-Datei müssen 'server' und"
             "'topic' eingetragen sein"
             )
     

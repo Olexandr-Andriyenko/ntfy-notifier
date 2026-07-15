@@ -140,6 +140,25 @@ def send_winner_notification(winner: dict, ntfy_config: dict):
     except requests.RequestException as error:
         print(f"Push Nachricht konnte nicht gesendet werden: {error}")
 
+def run_battle(players: list[dict]):
+    """Führt das Aktien Battle für alle Spieler durch."""
+    
+    results = []
+    errors = []
+    
+    for player in players:
+        try:
+            result = create_battle_result(player)
+            results.append(result)#
+        except Exception as error:
+            error_message = (
+                f"{player["name"] ({player["ticker"]}): {error}}"
+            )
+            errors.append(error_message)
+    
+    results.sort(key=get_change_percent, reverse=True)
+    return results, errors
+
 if __name__ == "__main__":
     config = load_config(CONFIG_FILE)
     players = config["players"]
